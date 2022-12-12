@@ -12,7 +12,7 @@ pipeline{
             steps{
       			checkout([$class: 'GitSCM', branches: [[name: '*/main']],
 			extensions: [],
-			userRemoteConfigs: [[url: 'https://github.com/ZrigHiba/hibaDevops.git']]])
+			userRemoteConfigs: [[url: 'https://github.com/chyheb/GestionTrain.git']]])
             }
         }
 
@@ -42,13 +42,14 @@ pipeline{
 
 
 
-        stage('Code Quality Check via SonarQube') {
-            steps{
-
-             		sh " mvn sonar:sonar -Dsonar.projectKey=devops -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.login=14ff9d41f05ffa8cabe2c7487513bbc606b1c70a"
-
-            }
-        }
+       stage("SonarQube") {
+                       steps {
+						echo 'SonarQube'
+                         withSonarQubeEnv('sonar') {
+                           sh 'mvn clean -DskipTests package sonar:sonar'
+                         }
+                       }
+                     }
 
 
         stage('Publish to Nexus') {
@@ -61,38 +62,11 @@ pipeline{
             }
         }
 
-stage('Build Docker Image') {
-                      steps {
-                          script {
-                            sh 'docker build -t hibazrig/spring-app:latest .'
-                          }
-                      }
-                  }
 
-                  stage('login dockerhub') {
-                                        steps {
-                                      sh 'docker login -u hibazrig -p habhouba1234'
-                                            }
-		  }
+
+
+		  
 	    
-	                      stage('Push Docker Image') {
-                                        steps {
-                                   sh 'docker push hibazrig/spring-app:latest'
-                                            }
-		  }
-
-
-		   stage('Run Spring && MySQL Containers') {
-                                steps {
-                                    script {
-                                      sh 'docker-compose up -d'
-                                    }
-                                }
-                            }
-
-	    
-
-
 
      
 }
