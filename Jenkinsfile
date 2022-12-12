@@ -24,17 +24,16 @@ pipeline{
             }
         }
 
+stage('Building JAR') {
+            steps {
+                echo 'Building with Maven'
+                sh 'mvn clean install -DskipTests'
+				}
+			}
 
+       
 
-        stage('Artifact Construction') {
-            steps{
-                	sh "mvn -B -DskipTests package "
-            }
-        }
-
-
-
-         stage('Unit Tests') {
+         stage('JUnit/Mockito') {
             steps{
                		 sh "mvn test "
             }
