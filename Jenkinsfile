@@ -42,16 +42,7 @@ pipeline{
 
 
 
-       stage("SonarQube") {
-                       steps {
-						echo 'SonarQube'
-                         withSonarQubeEnv('sonar') {
-                           sh 'mvn clean -DskipTests package sonar:sonar'
-                         }
-                       }
-                     }
-
-
+     
         stage('Publish to Nexus') {
             steps {
 
