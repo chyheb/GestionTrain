@@ -65,7 +65,7 @@ stage('Build Docker Image') {
                       steps {
 			      echo 'Building Docker Image'
                           script {
-                            sh 'docker build -t chihebnj/ExamThourayaS2 .'
+                            sh 'docker build -t chihebnj/examthourayas2 .'
                           }
                       }
                   }
@@ -84,7 +84,7 @@ stage('Build Docker Image') {
 	                      stage('Push Docker Image') {
                                         steps {
 					echo 'Pushing Docker Image'
-                                   sh 'docker push chihebnj/ExamThourayaS2'
+                                   sh 'docker push chihebnj/examthourayas2'
                                             }
 		  }
 
