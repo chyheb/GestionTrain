@@ -26,30 +26,32 @@ stage('Building JAR') {
 
         stage('Cleaning the project') {
             steps{
+		    echo 'Cleaning . . .'
                 	sh "mvn -B -DskipTests clean  "
             }
         }
 
 
-         stage('JUnit/Mockito') {
-            steps{
-               		 sh "mvn test "
-            }
-        }
-
  stage("SonarQube") {
                        steps {
-						echo 'SonarQube'
+			 echo 'SonarQube'
                          withSonarQubeEnv('sonar') {
                            sh 'mvn clean -DskipTests package sonar:sonar'
                          }
                        }
                      }
 
-     
+      stage('JUnit/Mockito') {
+            steps{
+		    echo 'Testing Facture Services'
+               		 sh "mvn test "
+            }
+        }
+	    
+	    
         stage('Publish to Nexus') {
             steps {
-
+ echo 'Nexus ...'
 
   sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit -DartifactId=ExamThourayaS2 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/devops/ -Dfile=target/ExamThourayaS2-1.0.jar'
 
