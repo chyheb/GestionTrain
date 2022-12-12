@@ -78,7 +78,7 @@ stage('Build Docker Image') {
 								sh 'docker login -u chihebnj -p ${dockerhubpwd}'
 							}
                                     
-                                            }
+						} }
 		  }
 	    
 	                      stage('Push Docker Image') {
