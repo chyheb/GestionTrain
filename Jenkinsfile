@@ -63,27 +63,35 @@ stage('Building JAR') {
 
 stage('Build Docker Image') {
                       steps {
+			      echo 'Building Docker Image'
                           script {
-                            sh 'docker build -t chihebnj/spring-app:latest .'
+                            sh 'docker build -t chihebnj/ExamThourayaS2 .'
                           }
                       }
                   }
 
                   stage('login dockerhub') {
                                         steps {
-                                      sh 'docker login -u chihebnj -p @123aze45'
+					echo 'Login toDocker '
+						script{
+							withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+								sh 'docker login -u chihebnj -p ${dockerhubpwd}'
+							}
+                                    
                                             }
 		  }
 	    
 	                      stage('Push Docker Image') {
                                         steps {
-                                   sh 'docker push chihebnj/spring-app:latest'
+					echo 'Pushing Docker Image'
+                                   sh 'docker push chihebnj/ExamThourayaS2'
                                             }
 		  }
 
 
 		   stage('Run Spring & MySQL Containers') {
                                 steps {
+					echo 'Docker compose'
                                     script {
                                       sh 'docker-compose up -d'
                                     }
