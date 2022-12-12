@@ -9,19 +9,11 @@ pipeline{
 
 
         stage('Getting project from Git') {
-            steps{
-      			checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-			extensions: [],
-			userRemoteConfigs: [[url: 'https://github.com/chyheb/GestionTrain.git']]])
-            }
-        }
-
-
-
-        stage('Cleaning the project') {
-            steps{
-                	sh "mvn -B -DskipTests clean  "
-            }
+            steps {
+                echo 'Pulling code from Git'
+                git branch: 'main', 
+                url: 'https://github.com/chyheb/GestionTrain.git'
+				}
         }
 
 stage('Building JAR') {
@@ -31,7 +23,12 @@ stage('Building JAR') {
 				}
 			}
 
-       
+        stage('Cleaning the project') {
+            steps{
+                	sh "mvn -B -DskipTests clean  "
+            }
+        }
+
 
          stage('JUnit/Mockito') {
             steps{
@@ -53,7 +50,7 @@ stage('Building JAR') {
             steps {
 
 
-  sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit -DartifactId=ExamThourayaS2 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/ExamThourayaS2-1.0.jar'
+  sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit -DartifactId=ExamThourayaS2 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/devops/ -Dfile=target/ExamThourayaS2-1.0.jar'
 
 
             }
