@@ -40,14 +40,21 @@ pipeline{
             }
         }
 
-
+ stage("SonarQube") {
+                       steps {
+						echo 'SonarQube'
+                         withSonarQubeEnv('sonar') {
+                           sh 'mvn clean -DskipTests package sonar:sonar'
+                         }
+                       }
+                     }
 
      
         stage('Publish to Nexus') {
             steps {
 
 
-  sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit -DartifactId=ExamThourayaS2 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://192.168.33.10:8081/repository/maven-releases/ -Dfile=target/ExamThourayaS2-1.0.jar'
+  sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit -DartifactId=ExamThourayaS2 -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=deploymentRepo -Durl=http://localhost:8081/repository/maven-releases/ -Dfile=target/ExamThourayaS2-1.0.jar'
 
 
             }
@@ -55,7 +62,34 @@ pipeline{
 
 
 
+stage('Build Docker Image') {
+                      steps {
+                          script {
+                            sh 'docker build -t chihebnj/spring-app:latest .'
+                          }
+                      }
+                  }
 
+                  stage('login dockerhub') {
+                                        steps {
+                                      sh 'docker login -u chihebnj -p @123aze45'
+                                            }
+		  }
+	    
+	                      stage('Push Docker Image') {
+                                        steps {
+                                   sh 'docker push chihebnj/spring-app:latest'
+                                            }
+		  }
+
+
+		   stage('Run Spring & MySQL Containers') {
+                                steps {
+                                    script {
+                                      sh 'docker-compose up -d'
+                                    }
+                                }
+                            }
 		  
 	    
 
