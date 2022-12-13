@@ -35,7 +35,7 @@ stage('Building JAR') {
  stage("SonarQube") {
                        steps {
 			 echo 'SonarQube'                       
-                     }
+		       }}
 
       stage('JUnit/Mockito') {
             steps{
