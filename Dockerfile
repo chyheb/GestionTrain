@@ -1,7 +1,7 @@
-FROM openjdk:11
+FROM maven:3.8.2-jdk-8
 
-EXPOSE 8080
+WORKDIR /spring-app
+COPY . .
+RUN mvn clean install -Dmaven.test.skip
 
-ADD /target/ExamThourayaS2.jar ExamThourayaS2-1.0.jar
-
-ENTRYPOINT ["java", "-jar", "/ExamThourayaS2-1.0.jar"]
+CMD mvn spring-boot:run
