@@ -34,8 +34,12 @@ stage('Building JAR') {
 
  stage("SonarQube") {
                        steps {
-			 echo 'SonarQube'                       
-		       }}
+			 echo 'SonarQube'
+                         withSonarQubeEnv('sonar') {
+                           sh 'mvn clean -DskipTests package sonar:sonar'
+                         }
+                       }
+                     }
 
       stage('JUnit/Mockito') {
             steps{
